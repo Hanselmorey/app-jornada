@@ -7,28 +7,27 @@
             font-family: Arial, sans-serif;
             background-color: #f0f2f5;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
             margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
         }
         h1 {
             margin-bottom: 30px;
             color: #333;
         }
-        .container {
-            background-color: white;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 300px;
-        }
         input[type="text"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -43,18 +42,19 @@
             cursor: pointer;
             font-size: 16px;
         }
-        .btn-iniciar { background-color: #f1c40f; }  /* amarelo */
+        .btn-iniciar { background-color: #2ecc71; }  /* verde */
         .btn-encerrar { background-color: #e74c3c; } /* vermelho */
         .btn-link {
             display: block;
             text-decoration: none;
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #3498db;
-            color: white;
+            padding: 12px;
+            margin: 8px 0;
             border-radius: 5px;
+            color: white;
             font-weight: bold;
         }
+        .btn-registros { background-color: #9b59b6; } /* roxo */
+        .btn-exportar { background-color: #000000; }   /* preto */
         .flash-success {
             background-color: #2ecc71;
             color: white;
@@ -89,12 +89,12 @@
         </form>
 
         <form method="POST" action="/encerrar">
-            <input type="text" name="motorista" placeholder="Nome do motorista" required>
+            <input type="hidden" name="motorista" value="">
             <button type="submit" class="btn-encerrar">Encerrar Jornada</button>
         </form>
 
-        <a href="/registros" class="btn-link">Ver Registros</a>
-        <a href="/exportar" class="btn-link">Exportar Excel</a>
+        <a href="/registros" class="btn-link btn-registros">Ver Registros</a>
+        <a href="/exportar" class="btn-link btn-exportar">Exportar Excel</a>
     </div>
 </body>
 </html>
