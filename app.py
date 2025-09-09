@@ -40,7 +40,7 @@ def iniciar_jornada():
         cursor.close()
         conexao.close()
         flash(f"Jornada do motorista {motorista} iniciada com sucesso!", "success")
-    except Exception as e:
+    except mysql.connector.Error as e:
         flash(f"Erro ao iniciar jornada: {str(e)}", "error")
     return redirect(url_for("index"))
 
@@ -68,7 +68,7 @@ def encerrar_jornada():
         cursor.close()
         conexao.close()
         flash(f"Jornada do motorista {motorista} encerrada com sucesso!", "success")
-    except Exception as e:
+    except mysql.connector.Error as e:
         flash(f"Erro ao encerrar jornada: {str(e)}", "error")
     return redirect(url_for("index"))
 
@@ -81,7 +81,7 @@ def registros():
         dados = cursor.fetchall()
         cursor.close()
         conexao.close()
-    except Exception as e:
+    except mysql.connector.Error as e:
         flash(f"Erro ao buscar registros: {str(e)}", "error")
         dados = []
     return render_template("registros.html", registros=dados)
