@@ -1,35 +1,31 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 import mysql.connector
-import os
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = "secreto123"  # necessário para flash funcionar
+app.secret_key = "secreto123"
 
-# Configuração do MySQL usando as variáveis do Railway
+# Configuração do MySQL PythonAnywhere
 db_config = {
-    "host": os.environ.get("MYSQLHOST", "mysql.railway.internal"),
-    "user": os.environ.get("MYSQLUSER", "root"),
-    "password": os.environ.get("MYSQLPASSWORD", "iseBLJSCirViXFJXsQwLZqWjYNVCHRRq"),
-    "database": os.environ.get("MYSQLDATABASE", "railway"),
-    "port": int(os.environ.get("MYSQLPORT", 3306))
+    "host": "yourusername.mysql.pythonanywhere-services.com",
+    "user": "yourusername",
+    "password": "SUA_SENHA",
+    "database": "jornada",
+    "port": 3306
 }
 
-# Função que retorna a conexão pronta
 def get_connection():
     return mysql.connector.connect(**db_config)
 
-# Página principal
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Iniciar jornada
 @app.route("/iniciar", methods=["POST"])
 def iniciar_jornada():
     motorista = request.form.get("motorista")
     if not motorista:
-        flash("Informe o nome do motorista!", "error")
+        flash("Informe o motorista!", "error")
         return redirect(url_for("index"))
     try:
         conexao = get_connection()
@@ -38,17 +34,16 @@ def iniciar_jornada():
         conexao.commit()
         cursor.close()
         conexao.close()
-        flash(f"Jornada do motorista {motorista} iniciada com sucesso!", "success")
+        flash(f"Jornada iniciada para {motorista}", "success")
     except mysql.connector.Error as e:
-        flash(f"Erro ao iniciar jornada: {str(e)}", "error")
+        flash(f"Erro: {str(e)}", "error")
     return redirect(url_for("index"))
 
-# Encerrar jornada
 @app.route("/encerrar", methods=["POST"])
 def encerrar_jornada():
     motorista = request.form.get("motorista")
     if not motorista:
-        flash("Informe o nome do motorista!", "error")
+        flash("Informe o motorista!", "error")
         return redirect(url_for("index"))
     try:
         conexao = get_connection()
@@ -63,12 +58,11 @@ def encerrar_jornada():
         conexao.commit()
         cursor.close()
         conexao.close()
-        flash(f"Jornada do motorista {motorista} encerrada com sucesso!", "success")
+        flash(f"Jornada encerrada para {motorista}", "success")
     except mysql.connector.Error as e:
-        flash(f"Erro ao encerrar jornada: {str(e)}", "error")
+        flash(f"Erro: {str(e)}", "error")
     return redirect(url_for("index"))
 
-# Ver registros
 @app.route("/registros")
 def registros():
     try:
@@ -79,11 +73,10 @@ def registros():
         cursor.close()
         conexao.close()
     except mysql.connector.Error as e:
-        flash(f"Erro ao buscar registros: {str(e)}", "error")
+        flash(f"Erro: {str(e)}", "error")
         dados = []
     return render_template("registros.html", registros=dados)
 
-# Exportar Excel
 @app.route("/exportar")
 def exportar():
     try:
@@ -94,8 +87,8 @@ def exportar():
         df.to_excel(caminho, index=False)
         return send_file(caminho, as_attachment=True)
     except Exception as e:
-        flash(f"Erro ao exportar Excel: {str(e)}", "error")
+        flash(f"Erro ao exportar: {str(e)}", "error")
         return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run()

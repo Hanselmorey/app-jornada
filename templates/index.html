@@ -1,100 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Controle de Jornada</title>
+    <meta charset="UTF-8">
+    <title>Bater Ponto</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            padding: 40px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 300px;
-        }
-        h1 {
-            margin-bottom: 30px;
-            color: #333;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn-iniciar { background-color: #2ecc71; }  /* verde */
-        .btn-encerrar { background-color: #e74c3c; } /* vermelho */
-        .btn-link {
-            display: block;
-            text-decoration: none;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-        }
-        .btn-registros { background-color: #9b59b6; } /* roxo */
-        .btn-exportar { background-color: #000000; }   /* preto */
-        .flash-success {
-            background-color: #2ecc71;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-        .flash-error {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
+        body { display: flex; flex-direction: column; align-items: center; font-family: Arial; margin-top: 50px; }
+        input, button { padding: 10px; margin: 5px; font-size: 16px; }
+        .amarelo { background-color: yellow; border: none; }
+        .verde { background-color: green; color: white; border: none; }
+        .roxo { background-color: purple; color: white; border: none; }
+        .preto { background-color: black; color: white; border: none; }
+        .flash-success { color: green; margin-bottom: 10px; }
+        .flash-error { color: red; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Controle de Jornada</h1>
+    <h1>Bater Ponto</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="flash-{{ category }}">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <form action="/iniciar" method="post">
+        <input type="text" name="motorista" placeholder="Nome do motorista" required>
+        <button type="submit" class="amarelo">Iniciar Jornada</button>
+    </form>
 
-        <form method="POST" action="/iniciar">
-            <input type="text" name="motorista" placeholder="Nome do motorista" required>
-            <button type="submit" class="btn-iniciar">Iniciar Jornada</button>
-        </form>
+    <form action="/encerrar" method="post">
+        <input type="text" name="motorista" placeholder="Nome do motorista" required>
+        <button type="submit" class="verde">Encerrar Jornada</button>
+    </form>
 
-        <form method="POST" action="/encerrar">
-            <input type="hidden" name="motorista" value="">
-            <button type="submit" class="btn-encerrar">Encerrar Jornada</button>
-        </form>
+    <form action="/registros" method="get">
+        <button type="submit" class="roxo">Ver Registros</button>
+    </form>
 
-        <a href="/registros" class="btn-link btn-registros">Ver Registros</a>
-        <a href="/exportar" class="btn-link btn-exportar">Exportar Excel</a>
-    </div>
+    <form action="/exportar" method="get">
+        <button type="submit" class="preto">Exportar Excel</button>
+    </form>
 </body>
 </html>
