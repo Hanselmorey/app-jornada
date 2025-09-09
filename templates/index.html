@@ -2,24 +2,74 @@
 <html>
 <head>
     <title>Controle de Jornada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .btn-iniciar { background-color: #f1c40f; }  /* amarelo */
+        .btn-encerrar { background-color: #e74c3c; } /* vermelho */
+        a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #3498db;
+        }
+        .flash-success {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .flash-error {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
     <h1>Controle de Jornada</h1>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form method="POST" action="/iniciar">
         <label>Motorista:</label>
         <input type="text" name="motorista" required>
-        <button type="submit">Iniciar Jornada</button>
+        <button type="submit" class="btn-iniciar">Iniciar Jornada</button>
     </form>
 
     <form method="POST" action="/encerrar">
         <label>Motorista:</label>
         <input type="text" name="motorista" required>
-        <button type="submit">Encerrar Jornada</button>
+        <button type="submit" class="btn-encerrar">Encerrar Jornada</button>
     </form>
 
     <br>
-    <a href="/registros">Ver Registros</a> |
+    <a href="/registros">Ver Registros</a>
     <a href="/exportar">Exportar Excel</a>
 </body>
 </html>
