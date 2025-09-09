@@ -6,22 +6,25 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = "secreto123"  # necessário para flash funcionar
 
-# Configuração do MySQL usando variáveis de ambiente do Railway
+# Configuração do MySQL usando as variáveis do Railway
 db_config = {
-    "host": os.environ.get("MYSQLHOST"),
-    "user": os.environ.get("MYSQLUSER"),
-    "password": os.environ.get("MYSQLPASSWORD"),
-    "database": os.environ.get("MYSQLDATABASE"),
+    "host": os.environ.get("MYSQLHOST", "mysql.railway.internal"),
+    "user": os.environ.get("MYSQLUSER", "root"),
+    "password": os.environ.get("MYSQLPASSWORD", "iseBLJSCirViXFJXsQwLZqWjYNVCHRRq"),
+    "database": os.environ.get("MYSQLDATABASE", "railway"),
     "port": int(os.environ.get("MYSQLPORT", 3306))
 }
 
+# Função para pegar a conexão
 def get_connection():
     return mysql.connector.connect(**db_config)
 
+# Rota principal
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# Iniciar jornada
 @app.route("/iniciar", methods=["POST"])
 def iniciar_jornada():
     motorista = request.form.get("motorista")
@@ -29,7 +32,7 @@ def iniciar_jornada():
         flash("Informe o nome do motorista!", "error")
         return redirect(url_for("index"))
     try:
-        conexao = get_connection()           # <-- Aqui
+        conexao = get_connection()
         cursor = conexao.cursor()
         cursor.execute("INSERT INTO jornada (motorista, inicio) VALUES (%s, NOW())", (motorista,))
         conexao.commit()
@@ -40,6 +43,7 @@ def iniciar_jornada():
         flash(f"Erro ao iniciar jornada: {str(e)}", "error")
     return redirect(url_for("index"))
 
+# Encerrar jornada
 @app.route("/encerrar", methods=["POST"])
 def encerrar_jornada():
     motorista = request.form.get("motorista")
@@ -47,7 +51,7 @@ def encerrar_jornada():
         flash("Informe o nome do motorista!", "error")
         return redirect(url_for("index"))
     try:
-        conexao = get_connection()           # <-- Aqui
+        conexao = get_connection()
         cursor = conexao.cursor()
         cursor.execute("""
             UPDATE jornada
@@ -64,10 +68,11 @@ def encerrar_jornada():
         flash(f"Erro ao encerrar jornada: {str(e)}", "error")
     return redirect(url_for("index"))
 
+# Ver registros
 @app.route("/registros")
 def registros():
     try:
-        conexao = get_connection()           # <-- Aqui
+        conexao = get_connection()
         cursor = conexao.cursor(dictionary=True)
         cursor.execute("SELECT * FROM jornada ORDER BY inicio DESC")
         dados = cursor.fetchall()
@@ -78,10 +83,11 @@ def registros():
         dados = []
     return render_template("registros.html", registros=dados)
 
+# Exportar Excel
 @app.route("/exportar")
 def exportar():
     try:
-        conexao = get_connection()           # <-- Aqui
+        conexao = get_connection()
         df = pd.read_sql("SELECT * FROM jornada", conexao)
         conexao.close()
         caminho = "jornadas.xlsx"
