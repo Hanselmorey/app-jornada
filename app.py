@@ -6,7 +6,7 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = "secreto123"  # necessário para flash funcionar
 
-# Configuração do banco usando as variáveis do Railway
+# Configuração do MySQL usando variáveis de ambiente do Railway
 db_config = {
     "host": os.environ.get("MYSQLHOST"),
     "user": os.environ.get("MYSQLUSER"),
@@ -22,18 +22,14 @@ def get_connection():
 def index():
     return render_template("index.html")
 
-@app.route("/iniciar", methods=["POST", "GET"])
+@app.route("/iniciar", methods=["POST"])
 def iniciar_jornada():
-    if request.method == "GET":
-        return redirect(url_for("index"))
-
     motorista = request.form.get("motorista")
     if not motorista:
         flash("Informe o nome do motorista!", "error")
         return redirect(url_for("index"))
-
     try:
-        conexao = get_connection()
+        conexao = get_connection()           # <-- Aqui
         cursor = conexao.cursor()
         cursor.execute("INSERT INTO jornada (motorista, inicio) VALUES (%s, NOW())", (motorista,))
         conexao.commit()
@@ -44,24 +40,20 @@ def iniciar_jornada():
         flash(f"Erro ao iniciar jornada: {str(e)}", "error")
     return redirect(url_for("index"))
 
-@app.route("/encerrar", methods=["POST", "GET"])
+@app.route("/encerrar", methods=["POST"])
 def encerrar_jornada():
-    if request.method == "GET":
-        return redirect(url_for("index"))
-
     motorista = request.form.get("motorista")
     if not motorista:
         flash("Informe o nome do motorista!", "error")
         return redirect(url_for("index"))
-
     try:
-        conexao = get_connection()
+        conexao = get_connection()           # <-- Aqui
         cursor = conexao.cursor()
         cursor.execute("""
-            UPDATE jornada 
-            SET fim = NOW() 
+            UPDATE jornada
+            SET fim = NOW()
             WHERE motorista = %s AND fim IS NULL
-            ORDER BY inicio DESC 
+            ORDER BY inicio DESC
             LIMIT 1
         """, (motorista,))
         conexao.commit()
@@ -75,7 +67,7 @@ def encerrar_jornada():
 @app.route("/registros")
 def registros():
     try:
-        conexao = get_connection()
+        conexao = get_connection()           # <-- Aqui
         cursor = conexao.cursor(dictionary=True)
         cursor.execute("SELECT * FROM jornada ORDER BY inicio DESC")
         dados = cursor.fetchall()
@@ -89,7 +81,7 @@ def registros():
 @app.route("/exportar")
 def exportar():
     try:
-        conexao = get_connection()
+        conexao = get_connection()           # <-- Aqui
         df = pd.read_sql("SELECT * FROM jornada", conexao)
         conexao.close()
         caminho = "jornadas.xlsx"
