@@ -4,27 +4,26 @@
     <title>Registros de Jornada</title>
 </head>
 <body>
-    <h1>Registros</h1>
+    <h1>Registros de Jornada</h1>
+
     <table border="1">
         <tr>
             <th>ID</th>
             <th>Motorista</th>
             <th>Início</th>
             <th>Fim</th>
-            <th>Status</th>
         </tr>
-        {% for j in jornadas %}
+        {% for r in registros %}
         <tr>
-            <td>{{ j.id }}</td>
-            <td>{{ j.motorista }}</td>
-            <td>{{ j.inicio }}</td>
-            <td>{{ j.fim if j.fim else "-" }}</td>
-            <td>{{ j.status }}</td>
+            <td>{{ r.id }}</td>
+            <td>{{ r.motorista }}</td>
+            <td>{{ r.inicio }}</td>
+            <td>{{ r.fim }}</td>
         </tr>
         {% endfor %}
     </table>
 
-    <p><a href="/export">Exportar para Excel</a></p>
-    <p><a href="/">Voltar</a></p>
+    <br>
+    <a href="/">Voltar</a>
 </body>
 </html>

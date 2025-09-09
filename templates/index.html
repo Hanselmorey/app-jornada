@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bater Ponto</title>
+    <title>Controle de Jornada</title>
 </head>
 <body>
     <h1>Controle de Jornada</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
 
-    <form method="POST">
-        <input type="text" name="motorista" placeholder="Nome do motorista" required>
-        <button type="submit" name="acao" value="iniciar">Iniciar Jornada</button>
-        <button type="submit" name="acao" value="encerrar">Encerrar Jornada</button>
+    <form method="POST" action="/iniciar">
+        <label>Motorista:</label>
+        <input type="text" name="motorista" required>
+        <button type="submit">Iniciar Jornada</button>
     </form>
 
-    <p><a href="/registros">Ver Registros</a></p>
+    <form method="POST" action="/encerrar">
+        <label>Motorista:</label>
+        <input type="text" name="motorista" required>
+        <button type="submit">Encerrar Jornada</button>
+    </form>
+
+    <br>
+    <a href="/registros">Ver Registros</a> |
+    <a href="/exportar">Exportar Excel</a>
 </body>
 </html>
