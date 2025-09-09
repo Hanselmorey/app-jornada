@@ -15,11 +15,11 @@ db_config = {
     "port": int(os.environ.get("MYSQLPORT", 3306))
 }
 
-# Função para pegar a conexão
+# Função que retorna a conexão pronta
 def get_connection():
     return mysql.connector.connect(**db_config)
 
-# Rota principal
+# Página principal
 @app.route("/")
 def index():
     return render_template("index.html")
