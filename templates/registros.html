@@ -1,39 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Registros de Jornada</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
-        table { border-collapse: collapse; width: 90%; margin: auto; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; }
-        tr:nth-child(even){background-color: #f9f9f9;}
-        tr:hover {background-color: #ddd;}
-        a button { margin-top: 20px; padding: 10px 20px; font-size: 16px; border-radius: 10px; border: none; background-color: #555; color: white; }
-    </style>
 </head>
 <body>
-    <h1>Registros de Jornada</h1>
-    <table>
+    <h1>Registros</h1>
+    <table border="1">
         <tr>
             <th>ID</th>
-            <th>Nome</th>
+            <th>Motorista</th>
             <th>Início</th>
             <th>Fim</th>
             <th>Status</th>
         </tr>
-        {% for r in registros %}
+        {% for j in jornadas %}
         <tr>
-            <td>{{ r[0] }}</td>
-            <td>{{ r[1] }}</td>
-            <td>{{ r[2] }}</td>
-            <td>{{ r[3] }}</td>
-            <td>{{ r[4] }}</td>
+            <td>{{ j.id }}</td>
+            <td>{{ j.motorista }}</td>
+            <td>{{ j.inicio }}</td>
+            <td>{{ j.fim if j.fim else "-" }}</td>
+            <td>{{ j.status }}</td>
         </tr>
         {% endfor %}
     </table>
-    <a href="/"><button>VOLTAR</button></a>
+
+    <p><a href="/export">Exportar para Excel</a></p>
+    <p><a href="/">Voltar</a></p>
 </body>
 </html>
